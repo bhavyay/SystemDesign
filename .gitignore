@@ -1,2 +1,5 @@
 Design.iml
 .idea/*
+target/*
+SystemDesign.iml
+*.iml

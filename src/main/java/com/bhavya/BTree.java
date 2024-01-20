@@ -1,8 +1,9 @@
 package com.bhavya;
 
+import java.util.ArrayList;
+
 class BTreeNode {
     int[] keys;
-
     int degree;
     BTreeNode[] children;
     boolean leaf;
@@ -12,7 +13,7 @@ class BTreeNode {
         this.keys = new int[2 * degree - 1];
         this.children = new BTreeNode[2 * degree];
         this.leaf = leaf;
-        this.degree = 0;
+        this.degree = degree;
         this.noOfKeysInNode = 0;
     }
 
@@ -115,8 +116,33 @@ public class BTree {
         }
     }
 
+    public void traverse(BTreeNode node, ArrayList<Integer> result) {
+        if (node == null) {
+            return;
+        }
+
+        for (int i = 0; i < node.noOfKeysInNode; i++) {
+            result.add(node.keys[i]);
+        }
+
+        if (!node.leaf) {
+            for (int i = 0; i < node.noOfKeysInNode + 1; i++) {
+                traverse(node.children[i], result);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         BTree bTree = new BTree(5);
+        bTree.insert(6);
         bTree.insert(2);
+        bTree.insert(4);
+
+        ArrayList<Integer> elements = new ArrayList<>();
+        bTree.traverse(bTree.root, elements);
+
+        for (int elem: elements) {
+            System.out.print(elem + " ");
+        }
     }
 }
