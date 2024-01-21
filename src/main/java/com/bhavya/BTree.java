@@ -18,24 +18,26 @@ class BTreeNode {
     }
 
     public void insertNonFull(int key) {
-        int i = noOfKeysInNode - 1;
         if (leaf) {
-            while (i >= 0 && keys[i] > key) {
+            int i = 0;
+            for(i = noOfKeysInNode - 1; i >= 0 && keys[i] > key; i--) {
                 keys[i + 1] = keys[i];
-                i--;
             }
 
             keys[i + 1] = key;
             noOfKeysInNode++;
         } else {
-            while (i >= 0 && keys[i] > key) {
-                i--;
+            int i = 0;
+            for (i = noOfKeysInNode - 1; i >= 0 && keys[i] > key; i--) {
+
             }
+            i++;
+            BTreeNode tmp = children[i];
 
-            if (children[i].isNodeFull()) {
-                splitChild(i + 1, children[i + 1]);
+            if (tmp.isNodeFull()) {
+                splitChild(i, tmp);
 
-                if (keys[i + 1] < key) {
+                if (keys[i] < key) {
                     i++;
                 }
             }
@@ -45,7 +47,7 @@ class BTreeNode {
 
     public void splitChild(int index, BTreeNode node) {
         BTreeNode newNode = new BTreeNode(node.degree, node.leaf);
-        newNode.noOfKeysInNode = node.noOfKeysInNode - 1;
+        newNode.noOfKeysInNode = node.degree - 1;
 
         for (int i = 0; i < degree - 1; i++) {
             newNode.keys[i] = node.keys[i + degree];
@@ -114,12 +116,7 @@ public class BTree {
                 newNode.children[0] = root;
 
                 newNode.splitChild(0, root);
-
-                int i = 0;
-                if (newNode.keys[0] < key) {
-                    i++;
-                }
-                newNode.children[i].insertNonFull(key);
+                newNode.insertNonFull(key);
 
                 root = newNode;
             } else {
@@ -138,14 +135,13 @@ public class BTree {
 
     public static void main(String[] args) {
         BTree bTree = new BTree(3);
-        bTree.insert(6);
-        bTree.insert(2);
-        bTree.insert(4);
         bTree.insert(8);
-        bTree.insert(50);
-        bTree.insert(30);
-        bTree.insert(16);
-        bTree.insert(89);
+        bTree.insert(9);
+        bTree.insert(10);
+        bTree.insert(11);
+        bTree.insert(15);
+        bTree.insert(20);
+        bTree.insert(17);
 
         ArrayList<Integer> result = bTree.traverse();
 
