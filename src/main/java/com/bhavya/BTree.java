@@ -73,6 +73,18 @@ class BTreeNode {
         noOfKeysInNode++;
     }
 
+    public void traverse(ArrayList<Integer> result) {
+        for (int i = 0; i < noOfKeysInNode; i++) {
+            result.add(keys[i]);
+        }
+
+        if (!leaf) {
+            for (int i = 0; i < noOfKeysInNode + 1; i++) {
+                children[i].traverse(result);
+            }
+        }
+    }
+
     public boolean isNodeFull() {
         return noOfKeysInNode == 2 * degree - 1;
     }
@@ -116,32 +128,28 @@ public class BTree {
         }
     }
 
-    public void traverse(BTreeNode node, ArrayList<Integer> result) {
-        if (node == null) {
-            return;
+    public ArrayList<Integer> traverse() {
+        ArrayList<Integer> result = new ArrayList<>();
+        if (root != null) {
+            root.traverse(result);
         }
-
-        for (int i = 0; i < node.noOfKeysInNode; i++) {
-            result.add(node.keys[i]);
-        }
-
-        if (!node.leaf) {
-            for (int i = 0; i < node.noOfKeysInNode + 1; i++) {
-                traverse(node.children[i], result);
-            }
-        }
+        return result;
     }
 
     public static void main(String[] args) {
-        BTree bTree = new BTree(5);
+        BTree bTree = new BTree(3);
         bTree.insert(6);
         bTree.insert(2);
         bTree.insert(4);
+        bTree.insert(8);
+        bTree.insert(50);
+        bTree.insert(30);
+        bTree.insert(16);
+        bTree.insert(89);
 
-        ArrayList<Integer> elements = new ArrayList<>();
-        bTree.traverse(bTree.root, elements);
+        ArrayList<Integer> result = bTree.traverse();
 
-        for (int elem: elements) {
+        for (int elem: result) {
             System.out.print(elem + " ");
         }
     }
