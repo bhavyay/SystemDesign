@@ -87,6 +87,22 @@ class BTreeNode {
         }
     }
 
+    public boolean search(int key) {
+        int i = 0;
+        for(i = 0; i < noOfKeysInNode; i++) {
+            if (key < keys[i]) {
+                break;
+            }
+            if (key == keys[i]) {
+                return true;
+            }
+        }
+        if (!leaf) {
+            return children[i].search(key);
+        }
+        return false;
+    }
+
     public boolean isNodeFull() {
         return noOfKeysInNode == 2 * degree - 1;
     }
@@ -133,6 +149,13 @@ public class BTree {
         return result;
     }
 
+    public boolean contain(int k) {
+        if (root == null) {
+            return false;
+        }
+        return root.search(k);
+    }
+
     public static void main(String[] args) {
         BTree bTree = new BTree(3);
         bTree.insert(8);
@@ -148,5 +171,7 @@ public class BTree {
         for (int elem: result) {
             System.out.print(elem + " ");
         }
+
+        System.out.println("Contains " + bTree.contain(15));
     }
 }
